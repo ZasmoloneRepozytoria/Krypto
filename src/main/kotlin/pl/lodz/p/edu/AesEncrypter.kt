@@ -1,6 +1,8 @@
 package pl.lodz.p.edu
 
-class AesEncrypter private constructor(val key: ByteArray) : Encrypter() {
+import java.security.SecureRandom
+
+class AesEncrypter(val key: AesKey) : Encrypter, Decrypter {
     // Tutaj tylko szyfrowanie i deszyfrowanie danych w postaci bajtów.
 
     override fun encryptData(data: ByteArray): ByteArray {
@@ -9,12 +11,5 @@ class AesEncrypter private constructor(val key: ByteArray) : Encrypter() {
 
     override fun decryptData(data: ByteArray): ByteArray {
         throw NotImplementedError("AES decryption is not implemented yet!")
-    }
-
-    companion object {
-        fun withKeyData(key: ByteArray) = AesEncrypter(key)
-
-        fun withHexKey(key: String) = AesEncrypter(key.hexToByteArray())
-        fun withBase64Key(key: String) = AesEncrypter(key.base64ToByteArray())
     }
 }
