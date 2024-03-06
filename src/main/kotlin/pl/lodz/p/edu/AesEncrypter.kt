@@ -30,18 +30,23 @@ class AesEncrypter(val key: AesKey) : Encrypter, Decrypter {
         0x28, 0xDF, 0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41,
         0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16 )
 
-    private fun addRoundKey(state: Array<ByteArray>, w: Array<ByteArray>, round: Int): Array<ByteArray> {
-        val tmp = arrayOf(ByteArray(4))
+    /**
+     * Dodaje klucz rundy [round] do [state].
+     */
+    private fun addRoundKey(state: Array<ByteArray>, roundKeys: Array<ByteArray>, round: Int): Array<ByteArray> {
+        val tmp = Array(4) { ByteArray(4) }
         for (i in 0..3){
             for (j in 0..3){
-                tmp[j][i] = state[j][i] xor w[4*round+i][j]
+                tmp[j][i] = state[j][i] xor roundKeys[4*round+i][j]
             }
         }
         return tmp
     }
+
     private fun SubBytes(word: ByteArray): ByteArray {
         return ByteArray(4) {i -> sBox[word[i].toInt()].toByte()}
     }
+
     private fun ShiftRows(state: Array<ByteArray>): Array<ByteArray> {
         val tmp = Array(4){ByteArray(4)}
         for (i in 0..3) {
