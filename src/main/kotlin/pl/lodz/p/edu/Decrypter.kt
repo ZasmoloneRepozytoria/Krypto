@@ -1,5 +1,5 @@
 package pl.lodz.p.edu
 
 interface Decrypter {
-    fun decryptData(data: ByteArray): ByteArray
+    fun decryptData(data: UByteArray): UByteArray
 }

@@ -2,8 +2,6 @@ package pl.lodz.p.edu
 
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
-
 class RsaEncrypterTest {
 
     @Test
@@ -11,7 +9,7 @@ class RsaEncrypterTest {
         val (publicKey, privateKey) = RsaKeyPair.generateRandom()
         val encrypter = RsaEncrypter(publicKey)
         val decrypter = RsaDecrypter(privateKey)
-        val data = "Hello, World!".toByteArray()
+        val data = "Hello, World!".toUByteArray()
 
         val encryptedData = encrypter.encryptData(data)
         val decryptedData = decrypter.decryptData(encryptedData)
@@ -27,12 +25,12 @@ class RsaEncrypterTest {
         val encrypter1 = RsaEncrypter(publicKey1)
         val encrypter2 = RsaEncrypter(publicKey2)
 
-        val data = "Hello, World!".toByteArray()
+        val data = "Hello, World!".toUByteArray()
 
         val encryptedData1 = encrypter1.encryptData(data)
         val encryptedData2 = encrypter2.encryptData(data)
 
-        assertNotEquals(encryptedData1, encryptedData2)
+        assertArrayNotEquals(encryptedData1, encryptedData2)
     }
 
     @Test
@@ -43,12 +41,12 @@ class RsaEncrypterTest {
         val encrypter = RsaEncrypter(publicKey)
         val decrypter = RsaDecrypter(wrongPrivateKey)
 
-        val data = "Hello, World!".toByteArray()
+        val data = "Hello, World!".toUByteArray()
 
         val encryptedData = encrypter.encryptData(data)
         // TODO: Can this throw an exception?
-        val decryptedData = decrypter.decryptData(data)
+        val decryptedData = decrypter.decryptData(encryptedData)
 
-        assertNotEquals(data, decryptedData)
+        assertArrayNotEquals(data, decryptedData)
     }
 }
