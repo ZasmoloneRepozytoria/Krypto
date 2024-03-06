@@ -21,7 +21,10 @@ tasks.test {
 
 kotlin {
     jvmToolchain(8)
-    compilerOptions.optIn.add("kotlin.ExperimentalStdlibApi")
+    compilerOptions.optIn.apply {
+        add("kotlin.ExperimentalStdlibApi")
+        add("kotlin.ExperimentalUnsignedTypes")
+    }
 }
 
 application {
