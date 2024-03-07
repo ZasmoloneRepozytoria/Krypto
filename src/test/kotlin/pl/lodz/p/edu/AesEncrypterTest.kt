@@ -1,6 +1,7 @@
 package pl.lodz.p.edu
 
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class AesEncrypterTest {
 
@@ -40,5 +41,15 @@ class AesEncrypterTest {
         val decryptedData = encrypter2.decryptData(encryptedData)
 
         assertArrayNotEquals(data, decryptedData)
+    }
+
+    @Test
+    fun `genSubKeys should generate Nr+1 keys`() {
+        val keys128 = AesKey.generateRandom(128).genSubKeys()
+        val keys192 = AesKey.generateRandom(192).genSubKeys()
+        val keys256 = AesKey.generateRandom(256).genSubKeys()
+        assertEquals(11, keys128.size/4)
+        assertEquals(13, keys192.size/4)
+        assertEquals(15, keys256.size/4)
     }
 }

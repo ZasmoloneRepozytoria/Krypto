@@ -17,12 +17,13 @@ value class AesKey(val value: UByteArray) {
         return value.toBase64String()
     }
 
+    //genSubKeys generuje tablicę słów dla wszystkich podkluczy
     fun genSubKeys(): Array<UByteArray> {
         val sBox = AesEncrypter.generateSBox()
-        val Nk = value.size / 4
-        val Nr = Nk + 6
-        val Rcon = ubyteArrayOf(0x1u, 0x2u, 0x4u, 0x8u, 0x10u, 0x20u, 0x40u, 0x80u, 0x1Bu, 0x36u)
-        var w = arrayOf<UByteArray>()
+        val wordsInKey = value.size / 4
+        val numberOfRounds = wordsInKey + 6 //Odnosi się do rund szyfrowania
+        val roundConstant = ubyteArrayOf(0x1u, 0x2u, 0x4u, 0x8u, 0x10u, 0x20u, 0x40u, 0x80u, 0x1Bu, 0x36u) //Round constant odnosi się do rundy tworzenia podkluczy
+        val roundKeys = Array(4*(numberOfRounds+1)){UByteArray(4)}
         var temp: UByteArray
 
         fun subWord(word: UByteArray): UByteArray {
@@ -34,25 +35,25 @@ value class AesKey(val value: UByteArray) {
         }
 
         var i = 0
-        while (i < Nk) {
-            w += ubyteArrayOf(value[4 * i], value[4 * i + 1], value[4 * i + 2], value[4 * i + 3])
+        while (i < wordsInKey) {
+            roundKeys[i] = ubyteArrayOf(value[4 * i], value[4 * i + 1], value[4 * i + 2], value[4 * i + 3])
             i++
         }
-        while (i <= 4 * Nr + 3) {
-            temp = w[i - 1]
-            if (i.mod(Nk) == 0) {
-                val firstByte = subWord(rotWord(temp))[0] xor Rcon[i]
+        while (i <= 4 * numberOfRounds + 3) {
+            temp = roundKeys[i - 1]
+            if (i.mod(wordsInKey) == 0) {
+                val firstByte = subWord(rotWord(temp))[0] xor roundConstant[(i/wordsInKey)-1]
                 temp = subWord(rotWord(temp))
                 temp[0] = firstByte
-            } else if (Nk > 6 && i.mod(Nk) == 4) {
+            } else if (wordsInKey > 6 && i.mod(wordsInKey) == 4) {
                 temp = subWord(temp)
             }
             for (j in 0..3) {
-                w[i][j] = w[i - Nk][j] xor temp[j]
+                roundKeys[i][j] = roundKeys[i - wordsInKey][j] xor temp[j]
             }
             i++
         }
-        return w
+        return roundKeys
     }
 
     companion object {
