@@ -17,11 +17,19 @@ value class AesKey(val value: UByteArray) {
         return value.toBase64String()
     }
 
+    fun getWordsInKey():Int {
+        return value.size/4
+    }
+
+    fun getNumberOfRounds(): Int {
+        return getWordsInKey() + 6
+    }
+
     //genSubKeys generuje tablicę słów dla wszystkich podkluczy
     fun genSubKeys(): Array<UByteArray> {
         val sBox = AesEncrypter.generateSBox()
-        val wordsInKey = value.size / 4
-        val numberOfRounds = wordsInKey + 6 //Odnosi się do rund szyfrowania
+        val wordsInKey = getWordsInKey()
+        val numberOfRounds = getNumberOfRounds() //Odnosi się do rund szyfrowania
         val roundConstant = ubyteArrayOf(0x1u, 0x2u, 0x4u, 0x8u, 0x10u, 0x20u, 0x40u, 0x80u, 0x1Bu, 0x36u) //Round constant odnosi się do rundy tworzenia podkluczy
         val roundKeys = Array(4*(numberOfRounds+1)){UByteArray(4)}
         var temp: UByteArray
