@@ -16,8 +16,14 @@ class AesEncrypter(val key: AesKey) : Encrypter, Decrypter {
         return tmp
     }
 
-    private fun subBytes(word: UByteArray): UByteArray {
-        return UByteArray(4) {i -> generateSBox()[word[i].toInt()]}
+    private fun subBytes(state: Array<UByteArray>): Array<UByteArray> {
+        val tmp = Array<UByteArray>(4){UByteArray(4)}
+        for (i in 0..15) {
+            for (j in 0..15) {
+                tmp[i][j] = generateSBox()[state[i][j].toInt()]
+            }
+        }
+        return tmp
     }
 
     private fun shiftRows(state: Array<UByteArray>): Array<UByteArray> {
@@ -53,7 +59,22 @@ class AesEncrypter(val key: AesKey) : Encrypter, Decrypter {
     }
 
     override fun encryptData(data: UByteArray): UByteArray {
-        throw NotImplementedError("AES encryption is not implemented yet!")
+        if (data.size != 16)
+            throw IllegalArgumentException("Block of data must be 16 byte long")
+
+        var state = arrayOf(data.copyOfRange(0, 3), data.copyOfRange(4, 7), data.copyOfRange(8, 11), data.copyOfRange(12, 15))
+        val roundKeys = key.genSubKeys()
+        state = addRoundKey(state, roundKeys, 0)
+        for (round in 1..<key.getNumberOfRounds()) {
+            state = subBytes(state)
+            state = shiftRows(state)
+            state = mixColumns(state)
+            state = addRoundKey(state, roundKeys, round)
+        }
+        state = subBytes(state)
+        state = shiftRows(state)
+        state = addRoundKey(state, roundKeys, 16)
+        return state.flatMap { it.asIterable() }.toUByteArray()
     }
 
     override fun decryptData(data: UByteArray): UByteArray {
