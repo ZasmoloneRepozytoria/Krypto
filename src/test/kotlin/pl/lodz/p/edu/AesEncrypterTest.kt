@@ -8,7 +8,7 @@ class AesEncrypterTest {
     @Test
     fun `should encrypt and decrypt data`() {
         val encrypter = AesEncrypter(AesKey.generateRandom(128))
-        val data = "Hello, World!".toUByteArray()
+        val data = UByteArray(16){0u}
 
         val encryptedData = encrypter.encryptData(data)
         val decryptedData = encrypter.decryptData(encryptedData)
