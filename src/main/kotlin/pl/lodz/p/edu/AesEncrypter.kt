@@ -49,7 +49,7 @@ class AesEncrypter(val key: AesKey) : Encrypter, Decrypter {
         val tmp = Array(4){UByteArray(4)}
         for (i in 0..3) {
             for (j in 0..3)
-                tmp[i][j] = state[i][(i-j).mod(4)]
+                tmp[i][j] = state[i][(j-i).mod(4)]
         }
         return tmp
     }
@@ -105,7 +105,13 @@ class AesEncrypter(val key: AesKey) : Encrypter, Decrypter {
         if (data.size != 16)
             throw IllegalArgumentException("Block of data must be 16 byte long")
 
-        var state = arrayOf(data.copyOfRange(0, 4), data.copyOfRange(4, 8), data.copyOfRange(8, 12), data.copyOfRange(12, 16))
+        var state = Array<UByteArray>(4){UByteArray(4)}
+        for (i in 0..3) {
+            for (j in 0..3) {
+                state[i][j] = data[i+(4*j)]
+            }
+        }
+
         val roundKeys = key.genSubKeys()
 
         state = addRoundKey(state, roundKeys, 0)
@@ -119,14 +125,27 @@ class AesEncrypter(val key: AesKey) : Encrypter, Decrypter {
         state = shiftRows(state)
         state = addRoundKey(state, roundKeys, key.getNumberOfRounds())
 
-        return state.flatMap { it.asIterable() }.toUByteArray()
+        val output = UByteArray(16)
+        for (i in 0..3) {
+            for (j in 0..3) {
+                output[i+4*j] = state[i][j]
+            }
+        }
+
+        return output
     }
 
     override fun decryptData(data: UByteArray): UByteArray {
         if (data.size != 16)
             throw IllegalArgumentException("Block of data must be 16 byte long")
 
-        var state = arrayOf(data.copyOfRange(0, 4), data.copyOfRange(4, 8), data.copyOfRange(8, 12), data.copyOfRange(12, 16))
+        var state = Array<UByteArray>(4){UByteArray(4)}
+        for (i in 0..3) {
+            for (j in 0..3) {
+                state[i][j] = data[i+(4*j)]
+            }
+        }
+
         val roundKeys = key.genSubKeys()
 
         state = addRoundKey(state, roundKeys, key.getNumberOfRounds())
@@ -141,7 +160,15 @@ class AesEncrypter(val key: AesKey) : Encrypter, Decrypter {
         }
         state = addRoundKey(state, roundKeys, 0)
 
-        return state.flatMap { it.asIterable() }.toUByteArray()
+
+        val output = UByteArray(16)
+        for (i in 0..3) {
+            for (j in 0..3) {
+                output[i+4*j] = state[i][j]
+            }
+        }
+
+        return output
     }
 
     companion object {

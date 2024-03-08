@@ -7,8 +7,8 @@ class AesEncrypterTest {
 
     @Test
     fun `should encrypt and decrypt data`() {
-        val encrypter = AesEncrypter(AesKey.generateRandom(128))
-        val data = UByteArray(16){0u}
+        val encrypter = AesEncrypter(AesKey.fromHex("2b7e151628aed2a6abf7158809cf4f3c"))
+        val data = ubyteArrayOf(0x32u, 0x43u, 0xf6u, 0xa8u, 0x88u, 0x5au, 0x30u, 0x8du, 0x31u, 0x31u, 0x98u, 0xa2u, 0xe0u, 0x37u, 0x07u, 0x34u)
 
         val encryptedData = encrypter.encryptData(data)
         val decryptedData = encrypter.decryptData(encryptedData)
@@ -21,7 +21,7 @@ class AesEncrypterTest {
         val encrypter1 = AesEncrypter(AesKey.generateRandom(128))
         val encrypter2 = AesEncrypter(AesKey.generateRandom(128))
 
-        val data = "Hello, World!".toUByteArray()
+        val data = UByteArray(16){0u}
 
         val encryptedData1 = encrypter1.encryptData(data)
         val encryptedData2 = encrypter2.encryptData(data)
@@ -34,7 +34,7 @@ class AesEncrypterTest {
         val encrypter1 = AesEncrypter(AesKey.generateRandom(128))
         val encrypter2 = AesEncrypter(AesKey.generateRandom(128))
 
-        val data = "Hello, World!".toUByteArray()
+        val data = UByteArray(16){0u}
 
         val encryptedData = encrypter1.encryptData(data)
         // TODO: Can this throw an exception?
