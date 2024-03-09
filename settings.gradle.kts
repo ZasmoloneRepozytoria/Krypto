@@ -10,3 +10,5 @@ plugins {
 }
 
 rootProject.name = "Krypto"
+include("src:main:GUI")
+findProject(":src:main:GUI")?.name = "GUI"

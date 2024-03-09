@@ -1,0 +1,27 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id("application")
+    id("org.openjfx.javafxplugin") version "0.1.0"
+}
+
+group = 'pl.lodz.p.edu'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+}
+
+test {
+    useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(20)
+}
+javafx {
+    version = "21.0.2"
+    modules("javafx.controls", "javafx.fxml")
+}
