@@ -1,11 +1,11 @@
-
+package pl.lodz.p.edu
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.control.Button
 import java.net.URL
 import java.util.*
 
-class MenuControler:Initializable {
+class MenuController:Initializable {
     @FXML
     private var aesButton = Button()
 
