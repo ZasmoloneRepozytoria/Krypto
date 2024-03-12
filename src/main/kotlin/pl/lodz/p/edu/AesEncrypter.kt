@@ -54,10 +54,6 @@ class AesEncrypter(val key: AesKey) : Encrypter, Decrypter {
         return tmp
     }
 
-    // Całkowicie szczerze ta funkcja jest przekopiowana z internetu i do tego
-    // przekonwertowana przez intellij z C# (bo wykryło jako java xD)
-    // Dla mnie to jest czarna magia i nie rozumiem co się tu dzieje
-    // Całkiem możliwe że ta funkcja nie będzie działać poprawnie
     private fun gMul(a: UByte, b: UByte): UByte {
         var a = a
         var b = b
