@@ -22,6 +22,8 @@ class AesController: Initializable {
     private var encryptedText = TextArea()
     @FXML
     private val encryptButton = Button()
+    @FXML
+    private val decryptButton = Button()
 
     @FXML
     private fun generateKey() {
@@ -31,18 +33,28 @@ class AesController: Initializable {
 
     @FXML
     private fun encrypt() {
-        println("bonk")
         var output = UByteArray(0)
         var stream = rawText.text.toUByteArray()
         val encrypter = AesEncrypter(AesKey.fromHex(keyField.text))
         if (stream.size % 16 != 0){
-            val complement = UByteArray(stream.size % 16){0u}
+            val complement = UByteArray(16 - stream.size % 16){0u}
             stream += complement
         }
         for (i in 0..<stream.size/16){
-            output+=encrypter.encryptData(stream.copyOfRange(i, 16*(i+1)))
+            output+=encrypter.encryptData(stream.copyOfRange(i*16, (i+1)*16))
         }
-        encryptedText.text = output.toHexString()
+        encryptedText.text = output.toBase64String()
+    }
+
+    @FXML
+    private fun decrypt() {
+        var output = UByteArray(0)
+        var stream = encryptedText.text.base64ToUByteArray()
+        val decrypter = AesEncrypter(AesKey.fromHex(keyField.text))
+        for (i in 0..<stream.size/16){
+            output+=decrypter.decryptData(stream.copyOfRange(i*16, (i+1)*16))
+        }
+        rawText.text = String(output.toByteArray(), Charsets.UTF_8)
     }
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
         keyLength.items.addAll(128, 192, 256)
