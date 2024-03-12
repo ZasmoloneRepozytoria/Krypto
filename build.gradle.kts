@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.0"
     application
+    id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
 group = "pl.lodz.p.edu"
@@ -29,4 +30,9 @@ kotlin {
 
 application {
     mainClass.set("MainKt")
+}
+
+javafx {
+    version = "21.0.2"
+    modules("javafx.controls", "javafx.fxml")
 }
