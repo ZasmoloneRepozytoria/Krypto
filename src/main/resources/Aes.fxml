@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
     <children>
@@ -24,7 +25,9 @@
             </font>
         </Label>
         <Button fx:id="keyButton" layoutX="15.0" layoutY="53.0" mnemonicParsing="false" onAction="#generateKey" text="Generate" />
-        <Button layoutX="15.0" layoutY="120.0" mnemonicParsing="false" text="Load File" />
+        <Button fx:id="loadButton" layoutX="15.0" layoutY="120.0" mnemonicParsing="false" onAction="#loadFile" text="Load File" />
         <ChoiceBox fx:id="keyLength" layoutX="216.0" layoutY="82.0" prefHeight="26.0" prefWidth="47.0" />
+      <ChoiceBox fx:id="modeBox" layoutX="270.0" layoutY="149.0" prefHeight="26.0" prefWidth="61.0" />
+      <Text fx:id="fileName" layoutX="15.0" layoutY="362.0" strokeType="OUTSIDE" strokeWidth="0.0" />
     </children>
 </AnchorPane>
