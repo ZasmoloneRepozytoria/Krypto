@@ -2,18 +2,19 @@ package pl.lodz.p.edu
 
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
-import javafx.scene.control.Button
 import javafx.scene.control.ChoiceBox
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
+import javafx.scene.text.Text
+import javafx.stage.FileChooser
+import javafx.stage.Stage
 import java.net.URL
 import java.util.*
+import javax.swing.filechooser.FileSystemView
 
 class AesController: Initializable {
     @FXML
     private var keyField = TextField()
-    @FXML
-    private val keyButton = Button()
     @FXML
     private var keyLength = ChoiceBox<Int>()
     @FXML
@@ -21,9 +22,11 @@ class AesController: Initializable {
     @FXML
     private var encryptedText = TextArea()
     @FXML
-    private val encryptButton = Button()
+    private var modeBox = ChoiceBox<String>()
     @FXML
-    private val decryptButton = Button()
+    private var fileName = Text()
+
+    private var buffer = UByteArray(0)
 
     @FXML
     private fun generateKey() {
@@ -32,10 +35,22 @@ class AesController: Initializable {
     }
 
     @FXML
+    private fun loadFile() {
+        val fileChooser = FileChooser()
+        fileChooser.title = "Chose file to encrypt"
+        fileChooser.initialDirectory = FileSystemView.getFileSystemView().defaultDirectory
+        val stage = rawText.scene.window as Stage
+        val file = fileChooser.showOpenDialog(stage) ?: return
+        buffer = file.readBytes().toUByteArray()
+        rawText.text = file.readBytes().toString(Charsets.UTF_8)
+        fileName.text = file.name
+    }
+
+    @FXML
     private fun encrypt() {
         var output = UByteArray(0)
-        var stream = rawText.text.toUByteArray()
         val encrypter = AesEncrypter(AesKey.fromHex(keyField.text))
+        var stream = if(modeBox.value=="Text") rawText.text.toUByteArray() else buffer
         if (stream.size % 16 != 0){
             val complement = UByteArray(16 - stream.size % 16){0u}
             stream += complement
@@ -57,6 +72,11 @@ class AesController: Initializable {
         rawText.text = String(output.toByteArray(), Charsets.UTF_8)
     }
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
+        rawText.isWrapText=true
+        encryptedText.isWrapText=true
+        keyLength.value=128
         keyLength.items.addAll(128, 192, 256)
+        modeBox.value="Text"
+        modeBox.items.addAll("Text", "File")
     }
 }
