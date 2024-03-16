@@ -3,10 +3,7 @@ package pl.lodz.p.edu
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
-import javafx.scene.control.Button
-import javafx.scene.control.ChoiceBox
-import javafx.scene.control.TextArea
-import javafx.scene.control.TextField
+import javafx.scene.control.*
 import javafx.scene.text.Text
 import javafx.stage.FileChooser
 import javafx.stage.Stage
@@ -90,31 +87,59 @@ class AesController: Initializable {
     }
     @FXML
     private fun encrypt() {
-        var output = UByteArray(0)
-        val encrypter = AesEncrypter(AesKey.fromHex(keyField.text))
-        var stream = if(modeBox.value == "Text") rawText.text.toUByteArray() else rawText.text.base64ToUByteArray()
-        if (stream.size % 16 != 0){
-            val complement = UByteArray(16 - stream.size % 16){0u}
-            stream += complement
+        try {
+            var output = UByteArray(0)
+            val encrypter = AesEncrypter(AesKey.fromHex(keyField.text))
+            var stream = if (modeBox.value == "Text") rawText.text.toUByteArray() else rawText.text.base64ToUByteArray()
+            if (stream.size % 16 != 0) {
+                val complement = UByteArray(16 - stream.size % 16) { 0u }
+                stream += complement
+            }
+            for (i in 0..<stream.size / 16) {
+                output += encrypter.encryptData(stream.copyOfRange(i * 16, (i + 1) * 16))
+            }
+            encryptedText.text = output.toBase64String()
         }
-        for (i in 0..<stream.size/16){
-            output+=encrypter.encryptData(stream.copyOfRange(i*16, (i+1)*16))
+        catch (e: KeyFormatException){
+            val a = Alert(Alert.AlertType.ERROR)
+            a.contentText = "Key error: " + e.message
+            e.printStackTrace()
+            a.show()
         }
-        encryptedText.text = output.toBase64String()
+        catch (e: IllegalArgumentException){
+            val a = Alert(Alert.AlertType.ERROR)
+            a.contentText = "Encrypt input is not in Base64 format"
+            e.printStackTrace()
+            a.show()
+        }
     }
 
     @FXML
     private fun decrypt() {
-        var output = UByteArray(0)
-        val stream = encryptedText.text.base64ToUByteArray()
-        val decrypter = AesEncrypter(AesKey.fromHex(keyField.text))
-        for (i in 0..<stream.size/16){
-            output+=decrypter.decryptData(stream.copyOfRange(i*16, (i+1)*16))
+        try {
+            var output = UByteArray(0)
+            val stream = encryptedText.text.base64ToUByteArray()
+            val decrypter = AesEncrypter(AesKey.fromHex(keyField.text))
+            for (i in 0..<stream.size / 16) {
+                output += decrypter.decryptData(stream.copyOfRange(i * 16, (i + 1) * 16))
+            }
+            if (modeBox.value == "Text") {
+                rawText.text = String(output.toByteArray(), Charsets.UTF_8)
+            } else {
+                rawText.text = output.toBase64String()
+            }
         }
-        if (modeBox.value=="Text") {
-            rawText.text = String(output.toByteArray(), Charsets.UTF_8)
-        } else {
-            rawText.text = output.toBase64String()
+        catch (e: KeyFormatException){
+            val a = Alert(Alert.AlertType.ERROR)
+            a.contentText = "Key error: " + e.message
+            e.printStackTrace()
+            a.show()
+        }
+        catch (e: IllegalArgumentException){
+            val a = Alert(Alert.AlertType.ERROR)
+            a.contentText = "Decrypt input is not in Base64 format"
+            e.printStackTrace()
+            a.show()
         }
     }
 
