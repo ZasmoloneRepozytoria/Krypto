@@ -2,11 +2,13 @@ package pl.lodz.p.edu
 
 import java.security.SecureRandom
 
+class KeyFormatException(s: String?) : IllegalArgumentException(s)
+
 @JvmInline
 value class AesKey(val value: UByteArray) {
     init {
         if (value.size !in listOf(16, 24, 32))
-            throw IllegalArgumentException("AES key must be 128, 192 or 256 bits.")
+            throw KeyFormatException("AES key must be 128, 192 or 256 bits.")
     }
 
     fun toHex(): String {
@@ -66,7 +68,11 @@ value class AesKey(val value: UByteArray) {
 
     companion object {
         fun fromHex(hex: String): AesKey {
-            return AesKey(hex.hexToUByteArray())
+            try {
+                return AesKey(hex.hexToUByteArray())
+            } catch (e: NumberFormatException) {
+                throw KeyFormatException("Hex format error")
+            }
         }
 
         fun fromBase64(base64: String): AesKey {
