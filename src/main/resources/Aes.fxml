@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <TextField fx:id="keyField" layoutX="14.0" layoutY="82.0" prefHeight="26.0" prefWidth="200.0" AnchorPane.leftAnchor="15.0" />
         <TextArea fx:id="rawText" layoutX="14.0" layoutY="149.0" prefHeight="200.0" prefWidth="248.0" AnchorPane.leftAnchor="15.0" />
@@ -17,17 +17,21 @@
         <Label layoutX="116.0" layoutY="125.0" text="Raw text" />
         <TextArea fx:id="encryptedText" layoutX="375.0" layoutY="149.0" prefHeight="200.0" prefWidth="248.0" AnchorPane.rightAnchor="15.0" />
         <Label layoutX="420.0" layoutY="125.0" text="Encrypted Text" />
-        <Button fx:id="encryptButton" layoutX="271.0" layoutY="200.0" mnemonicParsing="false" onAction="#encrypt" text="Encrypt" />
-        <Button fx:id="decryptionButton" layoutX="270.0" layoutY="259.0" mnemonicParsing="false" onAction="#decrypt" text="Decrypt" />
+        <Button fx:id="encryptButton" layoutX="267.0" layoutY="200.0" mnemonicParsing="false" onAction="#encrypt" prefHeight="26.0" prefWidth="67.0" text="Encrypt" />
+        <Button fx:id="decryptionButton" layoutX="268.0" layoutY="259.0" mnemonicParsing="false" onAction="#decrypt" prefHeight="26.0" prefWidth="67.0" text="Decrypt" />
         <Label layoutX="186.0" layoutY="21.0" text="Aes Encryption">
             <font>
                 <Font size="36.0" />
             </font>
         </Label>
         <Button fx:id="keyButton" layoutX="15.0" layoutY="53.0" mnemonicParsing="false" onAction="#generateKey" text="Generate" />
-        <Button fx:id="loadButton" layoutX="15.0" layoutY="120.0" mnemonicParsing="false" onAction="#loadFile" text="Load File" />
+        <Button fx:id="loadRawButton" disable="true" layoutX="15.0" layoutY="120.0" mnemonicParsing="false" onAction="#loadRaw" text="Load File" />
         <ChoiceBox fx:id="keyLength" layoutX="216.0" layoutY="82.0" prefHeight="26.0" prefWidth="47.0" />
       <ChoiceBox fx:id="modeBox" layoutX="270.0" layoutY="149.0" prefHeight="26.0" prefWidth="61.0" />
-      <Text fx:id="fileName" layoutX="15.0" layoutY="362.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Button fx:id="saveEncryptedButton" disable="true" layoutX="337.0" layoutY="353.0" mnemonicParsing="false" onAction="#saveEncrypted" text="Save" />
+      <Button fx:id="saveRawButton" disable="true" layoutX="14.0" layoutY="353.0" mnemonicParsing="false" onAction="#saveRaw" text="Save" />
+      <Button fx:id="loadEncryptedButton" disable="true" layoutX="337.0" layoutY="121.0" mnemonicParsing="false" onAction="#loadEncrypted" text="Load File" />
+      <Text fx:id="encryptedFileName" layoutX="397.0" layoutY="371.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="rawFileName" layoutX="61.0" layoutY="371.0" strokeType="OUTSIDE" strokeWidth="0.0" />
     </children>
 </AnchorPane>
