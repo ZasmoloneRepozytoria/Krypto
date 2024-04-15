@@ -1,5 +1,6 @@
 package pl.lodz.p.edu
 
+import java.math.BigInteger
 import java.util.*
 
 fun String.base64ToByteArray(): ByteArray {
@@ -19,5 +20,9 @@ fun UByteArray.toBase64String(): String {
 }
 
 fun String.toUByteArray(): UByteArray {
+    return this.toByteArray().toUByteArray()
+}
+
+fun BigInteger.toUByteArray(): UByteArray {
     return this.toByteArray().toUByteArray()
 }
