@@ -29,7 +29,7 @@
                   <Font size="36.0" />
                </font>
             </Button>
-            <Button disable="true" mnemonicParsing="false" prefHeight="75.0" prefWidth="150.0" text="RSA" GridPane.rowIndex="1">
+            <Button fx:id="rsaButton" mnemonicParsing="false" onAction="#onRsaButtonPushed" prefHeight="75.0" prefWidth="150.0" text="RSA" GridPane.rowIndex="1">
                <font>
                   <Font size="36.0" />
                </font>
