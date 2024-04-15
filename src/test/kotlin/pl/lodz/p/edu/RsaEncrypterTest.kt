@@ -1,9 +1,7 @@
 package pl.lodz.p.edu
 
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
-@Disabled("RSA not implemented yet.")
 class RsaEncrypterTest {
 
     @Test
@@ -12,7 +10,6 @@ class RsaEncrypterTest {
         val encrypter = RsaEncrypter(publicKey)
         val decrypter = RsaDecrypter(privateKey)
         val data = "Hello, World!".toUByteArray()
-
         val encryptedData = encrypter.encryptData(data)
         val decryptedData = decrypter.decryptData(encryptedData)
 
