@@ -1,10 +1,12 @@
 package pl.lodz.p.edu
 
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.RepeatedTest
+import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class RsaEncrypterTest {
 
-    @Test
+    @RepeatedTest(100)
     fun `should encrypt and decrypt data`() {
         val (publicKey, privateKey) = RsaKeyPair.generateRandom()
         val encrypter = RsaEncrypter(publicKey)
@@ -14,6 +16,13 @@ class RsaEncrypterTest {
         val decryptedData = decrypter.decryptData(encryptedData)
 
         assertArrayEquals(data, decryptedData)
+    }
+
+    @RepeatedTest(100)
+    fun `generated RSA key pair should be valid`() {
+        val keyPair = RsaKeyPair.generateRandom()
+
+        assertTrue(keyPair.isValid())
     }
 
     @Test
