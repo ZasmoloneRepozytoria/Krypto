@@ -4,6 +4,16 @@ import java.math.BigInteger
 import java.util.*
 
 data class RsaKeyPair(val publicKey: RsaPublicKey, val privateKey: RsaPrivateKey) {
+    fun isValid(): Boolean {
+        // We test the keys by encrypting and decrypting a random thing with them.
+        val encrypter = RsaEncrypter(publicKey)
+        val decrypter = RsaDecrypter(privateKey)
+        val data = "May the Force be with you.".toUByteArray()
+        val encryptedData = encrypter.encryptData(data)
+        val decryptedData = decrypter.decryptData(encryptedData)
+        return data contentEquals decryptedData
+    }
+
     companion object {
         fun generateRandom(): RsaKeyPair {
             val rnd = Random()
