@@ -26,3 +26,14 @@ fun String.toUByteArray(): UByteArray {
 fun BigInteger.toUByteArray(): UByteArray {
     return this.toByteArray().toUByteArray()
 }
+
+fun splitUByteArray(input: UByteArray, chunkSize: Int): List<UByteArray> {
+    val chunks = mutableListOf<UByteArray>()
+    var index = 0
+    while (index < input.size) {
+        val chunk = input.sliceArray(index until (index + chunkSize).coerceAtMost(input.size))
+        chunks.add(chunk)
+        index += chunk.size
+    }
+    return chunks
+}

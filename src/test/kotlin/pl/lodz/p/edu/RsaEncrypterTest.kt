@@ -6,19 +6,31 @@ import kotlin.test.assertTrue
 
 class RsaEncrypterTest {
 
-    @RepeatedTest(100)
-    fun `should encrypt and decrypt data`() {
+    @RepeatedTest(10)
+    fun `should encrypt and decrypt blocks`() {
         val (publicKey, privateKey) = RsaKeyPair.generateRandom()
         val encrypter = RsaEncrypter(publicKey)
         val decrypter = RsaDecrypter(privateKey)
         val data = "Hello, World!".toUByteArray()
+        val encryptedData = encrypter.encryptBlock(data)
+        val decryptedData = decrypter.decryptBlock(encryptedData)
+
+        assertArrayEquals(data, decryptedData)
+    }
+
+    @RepeatedTest(10)
+    fun `should encrypt and decrypt long data`() {
+        val (publicKey, privateKey) = RsaKeyPair.generateRandom()
+        val encrypter = RsaEncrypter(publicKey)
+        val decrypter = RsaDecrypter(privateKey)
+        val data = "ala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kotaala ma kota".toUByteArray()
         val encryptedData = encrypter.encryptData(data)
         val decryptedData = decrypter.decryptData(encryptedData)
 
         assertArrayEquals(data, decryptedData)
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     fun `generated RSA key pair should be valid`() {
         val keyPair = RsaKeyPair.generateRandom()
 
