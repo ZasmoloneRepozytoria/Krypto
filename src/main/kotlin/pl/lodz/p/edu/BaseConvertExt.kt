@@ -37,3 +37,16 @@ fun splitUByteArray(input: UByteArray, chunkSize: Int): List<UByteArray> {
     }
     return chunks
 }
+
+fun splitUByteArrayToBigIntegers(input: UByteArray, chunkSize: Int): List<UByteArray> {
+    val chunks = mutableListOf<UByteArray>()
+    var index = 0
+    while (index < input.size) {
+        val numberSize = if (input[index].toInt() == 0) chunkSize + 1 else chunkSize
+
+        val chunk = input.sliceArray(index until (index + numberSize).coerceAtMost(input.size))
+        chunks.add(chunk)
+        index += chunk.size
+    }
+    return chunks
+}
