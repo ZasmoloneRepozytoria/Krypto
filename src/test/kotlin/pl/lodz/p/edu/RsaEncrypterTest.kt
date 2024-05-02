@@ -18,7 +18,7 @@ class RsaEncrypterTest {
         assertArrayEquals(data, decryptedData)
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(100)
     fun `should encrypt and decrypt long data`() {
         val (publicKey, privateKey) = RsaKeyPair.generateRandom()
         val encrypter = RsaEncrypter(publicKey)

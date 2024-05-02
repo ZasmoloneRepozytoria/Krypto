@@ -6,7 +6,7 @@ class RsaDecrypter(val privateKey: RsaPrivateKey) : Decrypter {
 
     override fun decryptData(data: UByteArray): UByteArray {
         var output = UByteArray(0)
-        val tmp = splitUByteArray(data, 256)
+        val tmp = splitUByteArrayToBigIntegers(data, 256)
         for (segment in tmp){
             output += decryptBlock(segment)
         }
