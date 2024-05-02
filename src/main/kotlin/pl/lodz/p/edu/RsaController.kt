@@ -89,18 +89,10 @@ class RsaController: Initializable {
     @FXML
     private fun encrypt() {
         try {
-            var output = UByteArray(0)
             val encrypter = RsaEncrypter(RsaPublicKey.fromBase64(publicKeyField.text))
-            var stream = if (modeBox.value == "Text") rawText.text.toUByteArray() else rawText.text.base64ToUByteArray()
+            val stream = if (modeBox.value == "Text") rawText.text.toUByteArray() else rawText.text.base64ToUByteArray()
 
-            if (stream.size < 256) {
-                output += encrypter.encryptData(stream)
-            } else {
-                for (i in 0..<stream.size / 256) {
-                    output += encrypter.encryptData(stream.copyOfRange(i * 256, (i + 1) * 256))
-                }
-            }
-            encryptedText.text = output.toBase64String()
+            encryptedText.text = encrypter.encryptData(stream).toBase64String()
         }
         catch (e: KeyFormatException){
             val a = Alert(Alert.AlertType.ERROR)
@@ -119,16 +111,9 @@ class RsaController: Initializable {
     @FXML
     private fun decrypt() {
         try {
-            var output = UByteArray(0)
             val stream = encryptedText.text.base64ToUByteArray()
             val decrypter = RsaDecrypter(RsaPrivateKey.fromBase64(privateKeyField.text))
-            if (stream.size < 256) {
-                output += decrypter.decryptData(stream)
-            } else {
-                for (i in 0..<stream.size / 256) {
-                    output += decrypter.decryptData(stream.copyOfRange(i * 256, (i + 1) * 256))
-                }
-            }
+            val output = decrypter.decryptData(stream)
             if (modeBox.value == "Text") {
                 rawText.text = String(output.toByteArray(), Charsets.UTF_8)
             } else {
