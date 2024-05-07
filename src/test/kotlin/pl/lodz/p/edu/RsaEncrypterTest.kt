@@ -1,7 +1,10 @@
 package pl.lodz.p.edu
 
 import org.junit.jupiter.api.RepeatedTest
+import java.math.BigInteger
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class RsaEncrypterTest {
@@ -15,7 +18,7 @@ class RsaEncrypterTest {
         val encryptedData = encrypter.encryptBlock(data)
         val decryptedData = decrypter.decryptBlock(encryptedData)
 
-        assertArrayEquals(data, decryptedData)
+        assertEquals(BigInteger(data.toByteArray()), decryptedData)
     }
 
     @RepeatedTest(100)
@@ -50,7 +53,7 @@ class RsaEncrypterTest {
         val encryptedData1 = encrypter1.encryptData(data)
         val encryptedData2 = encrypter2.encryptData(data)
 
-        assertArrayNotEquals(encryptedData1, encryptedData2)
+        assertNotEquals(encryptedData1, encryptedData2)
     }
 
     @Test
