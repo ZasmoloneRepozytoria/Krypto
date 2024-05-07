@@ -53,7 +53,7 @@ class RsaController: Initializable {
     @FXML
     private fun loadEncrypted() {
         val file = loadFile() ?: return
-        encryptedText.text = file.readBytes().toBase64String()
+        encryptedText.text = String(file.readBytes())
         encryptedFileName.text = file.name
     }
 
@@ -83,16 +83,15 @@ class RsaController: Initializable {
         val stage = rawText.scene.window as Stage
         val file = fileChooser.showSaveDialog(stage) ?: return
         FileOutputStream(file).use { outputStream ->
-            outputStream.write(encryptedText.text.base64ToByteArray())
+            outputStream.write(encryptedText.text.toByteArray())
         }
     }
     @FXML
     private fun encrypt() {
         try {
             val encrypter = RsaEncrypter(RsaPublicKey.fromBase64(publicKeyField.text))
-            val stream = if (modeBox.value == "Text") rawText.text.toUByteArray() else rawText.text.base64ToUByteArray()
-
-            encryptedText.text = encrypter.encryptData(stream).toBase64String()
+            val stream = if (modeBox.value == "Text") rawText.text.toUByteArray() else rawText.text.toUByteArray()
+            encryptedText.text = encrypter.encryptData(stream)
         }
         catch (e: KeyFormatException){
             val a = Alert(Alert.AlertType.ERROR)
@@ -111,13 +110,13 @@ class RsaController: Initializable {
     @FXML
     private fun decrypt() {
         try {
-            val stream = encryptedText.text.base64ToUByteArray()
+            val stream = encryptedText.text
             val decrypter = RsaDecrypter(RsaPrivateKey.fromBase64(privateKeyField.text))
             val output = decrypter.decryptData(stream)
             if (modeBox.value == "Text") {
                 rawText.text = String(output.toByteArray(), Charsets.UTF_8)
             } else {
-                rawText.text = output.toBase64String()
+                rawText.text = String(output.toByteArray(), Charsets.UTF_8)
             }
         }
         catch (e: KeyFormatException){
